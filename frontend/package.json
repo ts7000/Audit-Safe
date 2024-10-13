@@ -19,6 +19,7 @@
     "@types/react-dom": "^18.3.0",
     "ajv": "^8.17.1",
     "autoprefixer": "^10.4.20",
+    "axios": "^1.7.7",
     "buffer": "^6.0.3",
     "classnames": "^2.5.1",
     "framer-motion": "^11.11.8",

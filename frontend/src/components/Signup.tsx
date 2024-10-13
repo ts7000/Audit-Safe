@@ -1,11 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import { ArrowRight, UserPlus } from "lucide-react";
+import { useNavigate } from "react-router-dom"; // For redirection
 
 export default function SignupPage() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // To redirect after successful registration
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const { message } = await response.json();
+        setError(message || "Registration failed");
+        setLoading(false);
+        return;
+      }
+
+      // Optionally handle successful registration (e.g., redirect to login)
+      navigate("/login"); // Redirect on successful registration
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-900 text-white relative overflow-hidden">
       {/* Background image with overlay */}
@@ -35,7 +80,7 @@ export default function SignupPage() {
           <h2 className="text-3xl font-bold text-center mb-6">
             Create an Account
           </h2>
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleSignup}>
             <div>
               <InputLabel htmlFor="name" sx={{ color: "white" }}>
                 Full Name
@@ -43,6 +88,8 @@ export default function SignupPage() {
               <Input
                 id="name"
                 type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
                 fullWidth
                 sx={{
@@ -67,6 +114,8 @@ export default function SignupPage() {
               <Input
                 id="email"
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
                 fullWidth
@@ -92,6 +141,8 @@ export default function SignupPage() {
               <Input
                 id="password"
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
                 fullWidth
                 sx={{
@@ -116,6 +167,8 @@ export default function SignupPage() {
               <Input
                 id="confirmPassword"
                 type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 fullWidth
                 sx={{
@@ -133,11 +186,16 @@ export default function SignupPage() {
                 }}
               />
             </div>
+
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+
             <Button
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700"
+              disabled={loading}
             >
-              Sign up <ArrowRight className="ml-2 h-4 w-4" />
+              {loading ? "Signing up..." : "Sign up"}
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </form>
           <p className="mt-4 text-center text-sm text-gray-300">

@@ -8,8 +8,7 @@ const { check, validationResult } = require('express-validator');
 // Validation middleware for registration
 const registerValidation = [
     check('email', 'Please include a valid email').isEmail(),
-    check('password', 'Password must be at least 6 characters').isLength({ min: 6 }),
-    check('profession', 'Profession is required').not().isEmpty()
+    check('password', 'Password must be at least 6 characters').isLength({ min: 6 })
 ];
 
 // Register a user
@@ -19,7 +18,7 @@ router.post('/register', registerValidation, async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password, profession } = req.body;
+    const { email, password } = req.body;
 
     try {
         let user = await User.findOne({ email });
@@ -29,8 +28,7 @@ router.post('/register', registerValidation, async (req, res) => {
 
         user = new User({
             email,
-            password,
-            profession
+            password
         });
 
         const salt = await bcrypt.genSalt(10);
@@ -50,7 +48,7 @@ router.post('/register', registerValidation, async (req, res) => {
                 console.error(err);
                 return res.status(500).json({ msg: 'Token generation error' });
             }
-            res.json({ token });
+            res.json({ msg: "success", token });
         });
     } catch (err) {
         console.error(err.message);
@@ -90,7 +88,7 @@ router.post('/login', async (req, res) => {
                 console.error(err);
                 return res.status(500).json({ msg: 'Token generation error' });
             }
-            res.json({ token });
+            res.json({ token, msg: "success" });
         });
     } catch (err) {
         console.error(err.message);

@@ -11,11 +11,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    profession: {
-        type: String,
-        required: true
-    },
-    // Remove any reference to textFile
+    date: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 const User = mongoose.model('User', userSchema);

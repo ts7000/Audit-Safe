@@ -20,9 +20,51 @@ import {
   CardContent,
 } from "./ui/card";
 import { Link } from "react-router-dom";
+import axios from "axios"; // Import axios for API calls
 
 export default function MainPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false); // State to manage sidebar visibility
+  const [selectedFile, setSelectedFile] = useState<File | null>(null); // State for file input
+  const [uploading, setUploading] = useState(false); // State to track upload status
+
+  // Handle file input change
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
+  // Handle PDF upload
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      alert("Please select a PDF file.");
+      return;
+    }
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("pdf", selectedFile);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/uploadPDF",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      const { text } = response.data;
+      localStorage.setItem("pdfText", text); // Store extracted text in local storage
+      alert("PDF uploaded and parsed successfully!");
+      console.log("PDF text:", localStorage.getItem("pdfText"));
+    } catch (error) {
+      console.error("Error uploading PDF:", error);
+      alert("Failed to upload and parse PDF.");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
     <div className="flex h-screen bg-gray-950 text-gray-200 relative overflow-hidden">
@@ -45,7 +87,7 @@ export default function MainPage() {
           sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
-        <Sidebar /> {/* Reuse Sidebar here */}
+        <Sidebar />
       </div>
 
       {/* Main content */}
@@ -66,10 +108,16 @@ export default function MainPage() {
             <Input
               type="file"
               accept=".pdf"
+              onChange={handleFileChange}
               className="bg-gray-700/50 border-gray-600 text-gray-200 file:bg-blue-600 file:text-gray-100 file:rounded-md hover:file:bg-blue-700"
             />
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              <Upload className="mr-2 h-4 w-4" /> Upload
+            <Button
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={handleUpload}
+              disabled={uploading}
+            >
+              <Upload className="mr-2 h-4 w-4" />
+              {uploading ? "Uploading..." : "Upload"}
             </Button>
           </div>
         </div>
@@ -96,7 +144,7 @@ export default function MainPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="mt-4 flex justify-center items-center space-x-2 ">
+              <div className="mt-4 flex justify-center items-center space-x-2">
                 <Link to="/home/generate-summary">
                   <Button className="w-full bg-blue-600 hover:bg-blue-700 transition-colors">
                     Generate Summary
@@ -138,7 +186,7 @@ export default function MainPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex  justify-center items-center space-x-4 mt-4">
+              <div className="flex justify-center items-center space-x-4 mt-4">
                 <Link to="/home/get-suggestions">
                   <Button className="w-full bg-yellow-600 hover:bg-yellow-700 transition-colors">
                     Get Suggestions
@@ -147,6 +195,7 @@ export default function MainPage() {
               </div>
             </CardContent>
           </Card>
+
           <Card className="bg-gray-800/50 border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="flex items-center text-teal-400">
