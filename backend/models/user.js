@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
     email: {
-        type: email,
+        type: String,
         required: true,
         unique: true,
         trim: true
@@ -15,10 +15,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    textFile: {
-        type: String,
-        required: true
-    }
+    // Remove any reference to textFile
 });
 
 const User = mongoose.model('User', userSchema);

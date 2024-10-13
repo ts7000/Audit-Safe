@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const pdfParse = require('pdf-parse');
 const fs = require('fs');
-const User = require('.../models/User');
+const User = require('../models/user');
 const router = express.Router();
 
 // Set up multer for file uploads
