@@ -15,7 +15,7 @@ router.post("/summarize-audit-report", async (req, res) => {
         return res.status(400).json({ error: "Invalid or missing auditReport" });
     }
 
-    const prompt = `Please summarize the following audit report and return the result in JSON format with the fields: "summary", "keyFinding"(in numbers),"riskAreas"(in numbers) and "complianceScore"(in percentage).\n\nAudit Report:\n${auditReport}`;
+    const prompt = `Please summarize the following audit report and return the result in JSON format with the fields: "summary", "keyFinding"(in numbers),"riskAreas"(in numbers) and "complianceScore"(in percentage).Please provide the summary in more than 800 words.\n\nAudit Report:\n${auditReport}`;
 
     try {
         const result = await model.generateContent(prompt);

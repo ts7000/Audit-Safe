@@ -22,6 +22,7 @@ import {
   ThumbsDown,
   MessageSquare,
   CheckCircle,
+  EggFriedIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -50,8 +51,7 @@ export default function GetSuggestionsPage() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              auditReport:
-                "The company underwent an external audit focusing on security policies, incident response, and data privacy. Three major vulnerabilities were identified. Data encryption protocols require an update. Incident response policies are partially aligned with compliance standards. Overall, the company demonstrates 75% compliance.",
+              auditReport: localStorage.getItem("pdfText"),
             }),
           }
         );
@@ -113,12 +113,20 @@ export default function GetSuggestionsPage() {
         <div>
           <h1 className="text-2xl font-bold text-blue-400 mb-8">AuditSafe</h1>
           <nav className="space-y-2">
+            <Link to="/home">
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-gray-800 transition-colors"
+              >
+                <Home className="mr-2 h-4 w-4" /> Home
+              </Button>
+            </Link>
             <Link to="/home/dashboard">
               <Button
                 variant="ghost"
                 className="w-full justify-start hover:bg-gray-800 transition-colors"
               >
-                <Home className="mr-2 h-4 w-4" /> Dashboard
+                <EggFriedIcon className="mr-2 h-4 w-4" /> Dashboard
               </Button>
             </Link>
             <Button

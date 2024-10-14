@@ -11,6 +11,7 @@ import {
   User,
   Settings,
   LogOut,
+  EggFriedIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -23,12 +24,20 @@ const Sidebar: React.FC = () => {
           AuditSafe
         </h1>
         <nav className="space-y-2">
+          <Link to="/home/">
+            <Button
+              variant="ghost"
+              className="w-full justify-start hover:bg-gray-800"
+            >
+              <Home className="mr-1 h-4 w-4" /> Home
+            </Button>
+          </Link>
           <Link to="/home/dashboard">
             <Button
               variant="ghost"
               className="w-full justify-start hover:bg-gray-800"
             >
-              <Home className="mr-1 h-4 w-4" /> Dashboard
+              <EggFriedIcon className="mr-1 h-4 w-4" /> Dashboard
             </Button>
           </Link>
           <Button

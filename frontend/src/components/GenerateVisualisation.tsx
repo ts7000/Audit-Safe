@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, EggFriedIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import Loader from "./Loader"; // Import Loader component
 import { Separator } from "./ui/separator";
@@ -48,8 +48,7 @@ export default function GenerateVisualizationPage() {
   const fetchChartData = async () => {
     setLoading(true); // Start Loader
     try {
-      const auditReport =
-        "The company underwent an external audit focusing on security policies, incident response, and data privacy. Three major vulnerabilities were identified. Data encryption protocols require an update. Incident response policies are partially aligned with compliance standards. Overall, the company demonstrates 75% compliance.";
+      const auditReport = localStorage.getItem("pdfText");
 
       const response = await fetch(
         "http://localhost:5000/api/get-visualization",
@@ -143,12 +142,20 @@ export default function GenerateVisualizationPage() {
         <div>
           <h1 className="text-2xl font-bold text-blue-400 mb-8">AuditSafe</h1>
           <nav className="space-y-2">
+            <Link to="/home">
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-gray-800 transition-colors"
+              >
+                <Home className="mr-2 h-4 w-4" /> Home
+              </Button>
+            </Link>
             <Link to="/home/dashboard">
               <Button
                 variant="ghost"
                 className="w-full justify-start hover:bg-gray-800 transition-colors"
               >
-                <Home className="mr-2 h-4 w-4" /> Dashboard
+                <EggFriedIcon className="mr-2 h-4 w-4" /> Dashboard
               </Button>
             </Link>
             <Button
