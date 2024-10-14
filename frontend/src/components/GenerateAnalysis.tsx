@@ -1,13 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "./ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import Progress from "./ui/progress";
 import {
   BarChart,
@@ -25,143 +19,153 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// Sample analysis data
-const sampleAnalysis = {
-  overallScore: 78,
-  riskLevel: "Medium",
-  keyFindings: [
-    "Improved compliance in financial reporting",
-    "Potential vulnerabilities in data security protocols",
-    "Inconsistencies in internal control procedures",
-  ],
-  metrics: [
-    { name: "Financial Accuracy", score: 85 },
-    { name: "Regulatory Compliance", score: 92 },
-    { name: "Operational Efficiency", score: 68 },
-    { name: "Risk Management", score: 72 },
-  ],
-};
+// Define TypeScript interface for API response
+interface AnalysisData {
+  overallScore: number;
+  riskLevel: string;
+  keyFindings: string[];
+  metrics: { name: string; score: number }[];
+}
 
+// Component
 export default function GenerateAnalysisPage() {
+  const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch data from API
+  useEffect(() => {
+    const fetchAnalysisData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/get-analysis", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            auditReport:
+              "The company underwent an external audit focusing on security policies, incident response, and data privacy. Three major vulnerabilities were identified. Data encryption protocols require an update. Incident response policies are partially aligned with compliance standards. Overall, the company demonstrates 75% compliance.",
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to load analysis data");
+        }
+
+        const data: AnalysisData = await response.json();
+        setAnalysisData(data);
+      } catch (err: any) {
+        setError(err.message || "An unexpected error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnalysisData();
+  }, []);
+
+  // Loader component
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-950 text-gray-100">
+        <div className="text-center">
+          <CheckCircle className="h-16 w-16 animate-spin text-blue-500 mb-4" />
+          <p className="text-lg">Loading analysis data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-950 text-gray-100">
+        <div className="text-center">
+          <AlertTriangle className="h-16 w-16 text-red-500 mb-4" />
+          <p className="text-lg">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-gray-950 text-gray-100 relative overflow-hidden">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 z-0 opacity-5">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500"></div>
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              "url('data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')",
-          }}
-        ></div>
-      </div>
-
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 p-6 flex flex-col justify-between relative z-10">
+      <aside className="w-64 bg-gray-900 p-6 flex flex-col justify-between">
         <div>
           <h1 className="text-2xl font-bold text-blue-400 mb-8">AuditSafe</h1>
           <nav className="space-y-2">
             <Link to="/home/dashboard">
-              <Button
-                variant="ghost"
-                className="w-full justify-start hover:bg-gray-800 transition-colors"
-              >
+              <Button variant="ghost" className="w-full justify-start">
                 <Home className="mr-2 h-4 w-4" /> Dashboard
               </Button>
             </Link>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-800 transition-colors"
-            >
+            <Button variant="ghost" className="w-full justify-start">
               <FileText className="mr-2 h-4 w-4" /> Reports
             </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-800 transition-colors"
-            >
+            <Button variant="ghost" className="w-full justify-start">
               <BarChart className="mr-2 h-4 w-4" /> Analytics
             </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-800 transition-colors"
-            >
+            <Button variant="ghost" className="w-full justify-start">
               <PieChart className="mr-2 h-4 w-4" /> Insights
             </Button>
           </nav>
         </div>
         <div>
-          <Separator className="my-4 bg-gray-700" />
+          <Separator className="my-4" />
           <Link to="/profile">
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-800 transition-colors"
-            >
+            <Button variant="ghost" className="w-full justify-start">
               <User className="mr-2 h-4 w-4" /> Profile
             </Button>
           </Link>
-          <Button
-            variant="ghost"
-            className="w-full justify-start hover:bg-gray-800 transition-colors"
-          >
+          <Button variant="ghost" className="w-full justify-start">
             <Settings className="mr-2 h-4 w-4" /> Settings
           </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-colors"
-          >
+          <Button variant="ghost" className="w-full justify-start text-red-400">
             <LogOut className="mr-2 h-4 w-4" /> Logout
           </Button>
         </div>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 p-8 overflow-auto relative z-10">
-        {/* Breadcrumb */}
+      {/* Main Content */}
+      <main className="flex-1 p-8 overflow-auto">
         <div className="text-sm text-gray-300 mb-4">
-          <span className="hover:text-blue-400 cursor-pointer">Home</span>
+          <span>Home</span>
           <ChevronRight className="inline h-4 w-4 mx-2" />
-          <span className="text-gray-100">Generate Analysis</span>
+          <span>Generate Analysis</span>
         </div>
 
-        <h2 className="text-3xl font-bold mb-2 text-gray-100">
-          Audit Analysis
-        </h2>
+        <h2 className="text-3xl font-bold mb-2">Audit Analysis</h2>
         <p className="text-gray-300 mb-6">
           Review the comprehensive analysis of your audit report.
         </p>
 
         {/* Overall Score */}
-        <Card className="bg-gray-800/50 border-gray-700 shadow-lg mb-6 backdrop-blur-sm">
+        <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-gray-100">Overall Audit Score</CardTitle>
+            <CardTitle>Overall Audit Score</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
+            <div className="flex justify-between">
               <div className="text-5xl font-bold text-blue-400">
-                {sampleAnalysis.overallScore}%
+                {analysisData?.overallScore}%
               </div>
-              <div className="text-right">
-                <p className="text-sm text-gray-300">Risk Level</p>
-                <p className="text-lg font-semibold text-yellow-400">
-                  {sampleAnalysis.riskLevel}
-                </p>
+              <div className="text-lg text-yellow-400">
+                {analysisData?.riskLevel}
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Key Findings */}
-        <Card className="bg-gray-800/50 border-gray-700 shadow-lg mb-6 backdrop-blur-sm">
+        <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-gray-100">Key Findings</CardTitle>
+            <CardTitle>Key Findings</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2">
-              {sampleAnalysis.keyFindings.map((finding, index) => (
-                <li key={index} className="flex items-start">
-                  <AlertTriangle className="mr-2 h-5 w-5 text-yellow-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-200">{finding}</span>
+            <ul>
+              {analysisData?.keyFindings.map((finding, index) => (
+                <li key={index} className="flex items-center mb-2">
+                  <AlertTriangle className="text-yellow-400 mr-2" />
+                  <span>{finding}</span>
                 </li>
               ))}
             </ul>
@@ -169,48 +173,27 @@ export default function GenerateAnalysisPage() {
         </Card>
 
         {/* Metrics */}
-        <Card className="bg-gray-800/50 border-gray-700 shadow-lg mb-6 backdrop-blur-sm">
+        <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-gray-100">Performance Metrics</CardTitle>
+            <CardTitle>Performance Metrics</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {sampleAnalysis.metrics.map((metric, index) => (
-                <div key={index}>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm font-medium text-gray-300">
-                      {metric.name}
-                    </span>
-                    <span className="text-sm font-medium text-gray-300">
-                      {metric.score}%
-                    </span>
-                  </div>
-                  <Progress value={metric.score} className="h-2" />
+            {analysisData?.metrics.map((metric, index) => (
+              <div key={index}>
+                <div className="flex justify-between">
+                  <span>{metric.name}</span>
+                  <span>{metric.score}%</span>
                 </div>
-              ))}
-            </div>
+                <Progress value={metric.score} />
+              </div>
+            ))}
           </CardContent>
         </Card>
 
-        {/* Actions */}
         <div className="flex space-x-4">
-          <Button className="bg-blue-600 hover:bg-blue-700 transition-colors">
-            <TrendingUp className="mr-2 h-4 w-4" /> Generate Detailed Report
-          </Button>
-          <Button variant="outline">
-            <Download className="mr-2 h-4 w-4" /> Download Analysis
-          </Button>
+          <Button>Generate Detailed Report</Button>
+          <Button variant="outline">Download Analysis</Button>
         </div>
-
-        {/* Footer */}
-        <footer className="mt-12 text-center text-gray-300 text-sm">
-          <p>
-            &copy; 2023 AuditSafe. All rights reserved. |{" "}
-            <a href="#" className="hover:text-blue-400">
-              Contact Support
-            </a>
-          </p>
-        </footer>
       </main>
     </div>
   );

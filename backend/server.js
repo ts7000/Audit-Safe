@@ -4,6 +4,10 @@ const connectDB = require('./db');
 require('dotenv').config();
 const getFile = require('./routes/getFile');
 const authRoutes = require('./routes/auth'); // Import auth routes
+const summarizeAuditReport = require('./routes/summary'); // Import summarizeAuditReport route
+const getSuggestions = require('./routes/suggestion'); // Import getSuggestions route
+const getAnalysis = require('./routes/analysis'); // Import getAnalysis route
+const getVisualization = require('./routes/visualization'); // Import getVisualization route
 
 const app = express();
 const port = 5000;
@@ -14,6 +18,11 @@ app.use(express.json());
 
 app.use('/api', getFile);
 app.use('/api/auth', authRoutes); // Register the auth route
+app.use("/api", summarizeAuditReport); // Prefixing the API routes
+app.use("/api", getSuggestions);
+app.use("/api", getAnalysis);
+app.use("/api", getVisualization);
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

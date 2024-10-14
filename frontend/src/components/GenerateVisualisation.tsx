@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import { ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import Loader from "./Loader"; // Import Loader component
 import { Separator } from "./ui/separator";
 import {
   Card,
@@ -8,13 +11,7 @@ import {
   CardDescription,
   CardContent,
 } from "./ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
+
 import {
   BarChart,
   FileText,
@@ -25,9 +22,6 @@ import {
   LogOut,
   Download,
   RefreshCw,
-  ChevronRight,
-  LineChart,
-  BarChart2,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -43,47 +37,55 @@ import {
   LineChart as RechartsLineChart,
   Line,
 } from "recharts";
-import { Link } from "react-router-dom";
-
-const sampleData = [
-  { name: "Jan", value: 400 },
-  { name: "Feb", value: 300 },
-  { name: "Mar", value: 500 },
-  { name: "Apr", value: 280 },
-  { name: "May", value: 200 },
-  { name: "Jun", value: 450 },
-];
-
-const COLORS = [
-  "#0088FE",
-  "#00C49F",
-  "#FFBB28",
-  "#FF8042",
-  "#8884D8",
-  "#82CA9D",
-];
 
 export default function GenerateVisualizationPage() {
-  const [chartType, setChartType] = useState("bar");
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [chartType, setChartType] = useState(""); // Store selected chart type
+  const [data, setData] = useState([]); // Store chart data
+  const [colors, setColors] = useState([]); // Store chart colors
+  const [loading, setLoading] = useState(false); // Loader state
+  const [chartFetched, setChartFetched] = useState(false); // Control chart rendering
 
-  const handleValueChange = (value: string) => {
-    setChartType(value);
-    setIsDisabled(true); // Disable the Select component
+  const fetchChartData = async () => {
+    setLoading(true); // Start Loader
+    try {
+      const auditReport =
+        "The company underwent an external audit focusing on security policies, incident response, and data privacy. Three major vulnerabilities were identified. Data encryption protocols require an update. Incident response policies are partially aligned with compliance standards. Overall, the company demonstrates 75% compliance.";
+
+      const response = await fetch(
+        "http://localhost:5000/api/get-visualization",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ auditReport }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch data");
+
+      const result = await response.json();
+      setData(result.sampleData);
+      setColors(result.colors);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false); // Stop Loader
+    }
   };
 
   const handleGenerateChart = () => {
-    if (chartType) {
-      console.log(`Generating ${chartType} chart...`);
-      // Add chart generation logic here
-    }
+    setChartFetched(true); // Mark chart as ready to render
+    fetchChartData(); // Fetch data and show loader
   };
+
   const renderChart = () => {
+    if (loading) return <Loader size="small" />; // Show Loader if data is loading
+    if (!chartFetched || !chartType) return null; // Render only if chart is ready
+
     switch (chartType) {
       case "bar":
         return (
           <ResponsiveContainer width="100%" height={300}>
-            <RechartsBarChart data={sampleData}>
+            <RechartsBarChart data={data}>
               <XAxis dataKey="name" stroke="#888888" />
               <YAxis stroke="#888888" />
               <Tooltip />
@@ -97,7 +99,7 @@ export default function GenerateVisualizationPage() {
           <ResponsiveContainer width="100%" height={300}>
             <RechartsPieChart>
               <Pie
-                data={sampleData}
+                data={data}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
@@ -105,10 +107,10 @@ export default function GenerateVisualizationPage() {
                 fill="#8884d8"
                 dataKey="value"
               >
-                {sampleData.map((entry, index) => (
+                {data.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
+                    fill={colors[index % colors.length]}
                   />
                 ))}
               </Pie>
@@ -120,7 +122,7 @@ export default function GenerateVisualizationPage() {
       case "line":
         return (
           <ResponsiveContainer width="100%" height={300}>
-            <RechartsLineChart data={sampleData}>
+            <RechartsLineChart data={data}>
               <XAxis dataKey="name" stroke="#888888" />
               <YAxis stroke="#888888" />
               <Tooltip />
@@ -136,18 +138,6 @@ export default function GenerateVisualizationPage() {
 
   return (
     <div className="flex h-screen bg-gray-950 text-gray-200 relative overflow-hidden">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 z-0 opacity-5">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500"></div>
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              "url('data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')",
-          }}
-        ></div>
-      </div>
-
       {/* Sidebar */}
       <aside className="w-64 bg-gray-900 p-6 flex flex-col justify-between relative z-10">
         <div>
@@ -206,9 +196,9 @@ export default function GenerateVisualizationPage() {
         </div>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 p-8 overflow-auto relative z-10">
-        {/* Breadcrumb */}
+      {/* Main Content */}
+      <main className="flex-1 p-8 overflow-auto">
+        {/* Breadcrumbs */}
         <div className="text-sm text-gray-400 mb-4">
           <span className="hover:text-blue-400 cursor-pointer">Home</span>
           <ChevronRight className="inline h-4 w-4 mx-2" />
@@ -217,98 +207,82 @@ export default function GenerateVisualizationPage() {
           <span className="text-gray-200">Generate Visualization</span>
         </div>
 
-        <h2 className="text-3xl font-bold mb-2 text-gray-100">
-          Generate Visualization
-        </h2>
-        <p className="text-gray-400 mb-6">
-          Create visual representations of your audit report data to gain
-          insights at a glance.
-        </p>
+        <h2 className="text-3xl font-bold mb-4">Generate Visualization</h2>
 
-        <Card className="bg-gray-800/50 border-gray-700 shadow-lg mb-8 backdrop-sm">
+        <Card className="bg-gray-800/50 border-gray-700 mb-6">
           <CardHeader>
-            <CardTitle>Visualization Options</CardTitle>
+            <CardTitle>Select Chart Type</CardTitle>
             <CardDescription>
-              Select the type of chart you want to generate
+              Choose the type of chart you want to generate.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col space-y-4">
-              {/* Radio Buttons for Chart Selection */}
-              <label className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4 mb-4">
+              {/* Radio Buttons for Chart Type */}
+              <label className="flex items-center">
                 <input
                   type="radio"
                   name="chartType"
                   value="bar"
-                  checked={chartType === "bar"}
                   onChange={() => setChartType("bar")}
-                  className="form-radio text-blue-500"
+                  className="mr-2"
                 />
-                <span>Bar Chart</span>
+                Bar Chart
               </label>
-              <label className="flex items-center space-x-2">
+              <label className="flex items-center">
                 <input
                   type="radio"
                   name="chartType"
                   value="pie"
-                  checked={chartType === "pie"}
                   onChange={() => setChartType("pie")}
-                  className="form-radio text-blue-500"
+                  className="mr-2"
                 />
-                <span>Pie Chart</span>
+                Pie Chart
               </label>
-              <label className="flex items-center space-x-2">
+              <label className="flex items-center">
                 <input
                   type="radio"
                   name="chartType"
                   value="line"
-                  checked={chartType === "line"}
                   onChange={() => setChartType("line")}
-                  className="form-radio text-blue-500"
+                  className="mr-2"
                 />
-                <span>Line Chart</span>
+                Line Chart
               </label>
+            </div>
 
-              <div className="flex space-x-4">
-                <Button className="bg-blue-600 hover:bg-blue-700 transition-colors">
-                  <RefreshCw className="mr-2 h-4 w-4" /> Generate Chart
-                </Button>
-              </div>
+            {/* Generate Chart Button */}
+            <div className="">
+              <Button onClick={handleGenerateChart} disabled={!chartType}>
+                Generate Chart
+              </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* Chart Display */}
-        <Card className="bg-gray-800/50 border-gray-700 shadow-lg mb-8 backdrop-sm">
-          <CardHeader>
-            <CardTitle>Generated Visualization</CardTitle>
-            <CardDescription>
-              Preview of your selected chart type
-            </CardDescription>
-          </CardHeader>
-          <CardContent>{renderChart()}</CardContent>
-        </Card>
+        {/* Render Chart */}
+        {renderChart()}
+        <div className="fixed bottom-0  p-4 text-center">
+          <div className="flex space-x-4">
+            <Button className="bg-blue-600 hover:bg-blue-700 transition-colors">
+              <RefreshCw className="mr-2 h-4 w-4" /> Regenerate Chart
+            </Button>
+            <Button variant="outline">
+              <Download className="mr-2 h-4 w-4" /> Download Chart as Image
+            </Button>
+            <Button variant="ghost">Go Back to Dashboard</Button>
+          </div>
 
-        {/* Actions Section */}
-        <div className="flex space-x-4">
-          <Button className="bg-blue-600 hover:bg-blue-700 transition-colors">
-            <RefreshCw className="mr-2 h-4 w-4" /> Regenerate Chart
-          </Button>
-          <Button variant="outline">
-            <Download className="mr-2 h-4 w-4" /> Download Chart as Image
-          </Button>
-          <Button variant="ghost">Go Back to Dashboard</Button>
+          {/* Footer */}
+          <footer className="mt-12 text-center text-gray-400 text-sm">
+            <p>
+              &copy; 2024 AuditSafe. All rights reserved. |{" "}
+              <a href="#" className="hover:text-blue-400">
+                Contact Support
+              </a>
+            </p>
+          </footer>
         </div>
-
-        {/* Footer */}
-        <footer className="mt-12 text-center text-gray-400 text-sm">
-          <p>
-            &copy; 2024 AuditSafe. All rights reserved. |{" "}
-            <a href="#" className="hover:text-blue-400">
-              Contact Support
-            </a>
-          </p>
-        </footer>
       </main>
     </div>
   );

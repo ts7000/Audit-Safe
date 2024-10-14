@@ -1,15 +1,9 @@
 // src/pages/GenerateSummaryPage.tsx
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "./ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import {
   BarChart,
   FileText,
@@ -19,21 +13,60 @@ import {
   User,
   LogOut,
   Download,
-  FileSearch,
   ChevronRight,
   Bookmark,
   AlertTriangle,
   CheckCircle,
 } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Link } from "react-router-dom";
+import Loader from "./Loader"; // Import your loader component
+
+// Define an interface for the summary data
+interface SummaryData {
+  keyFinding: string;
+  riskAreas: string;
+  complianceScore: number;
+  summary: string;
+}
 
 export default function GenerateSummaryPage() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [summaryData, setSummaryData] = useState<SummaryData | null>(null); // Use the interface here
+  const [loading, setLoading] = useState(true); // State to manage loading
+
+  useEffect(() => {
+    const fetchSummaryData = async () => {
+      const apiUrl = "http://localhost:5000/api/summarize-audit-report";
+      const auditReport =
+        "The company underwent an external audit focusing on security policies, incident response, and data privacy. Three major vulnerabilities were identified. Data encryption protocols require an update. Incident response policies are partially aligned with compliance standards. Overall, the company demonstrates 75% compliance.";
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ auditReport }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        setSummaryData(data);
+      } catch (error) {
+        console.error("Error fetching summary data:", error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
+      }
+    };
+
+    fetchSummaryData();
+  }, []);
 
   return (
     <div className="flex h-screen bg-gray-950 text-gray-200 relative overflow-hidden">
-      {/* Subtle background pattern */}
       <div className="absolute inset-0 z-0 opacity-5">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500"></div>
         <div
@@ -105,7 +138,6 @@ export default function GenerateSummaryPage() {
 
       {/* Main content */}
       <main className="flex-1 p-8 overflow-auto relative z-10">
-        {/* Breadcrumb */}
         <div className="text-sm text-gray-400 mb-4">
           <span className="hover:text-blue-400 cursor-pointer">Home</span>
           <ChevronRight className="inline h-4 w-4 mx-2" />
@@ -122,79 +154,88 @@ export default function GenerateSummaryPage() {
           insights.
         </p>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-gray-800/50 border-gray-700 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
-            <CardHeader>
-              <CardTitle className="flex items-center text-blue-400">
-                <Bookmark className="mr-2 h-5 w-5" />
-                Key Findings
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">12</p>
-              <p className="text-sm text-gray-400 mx-2">
-                Important points identified
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="bg-gray-800/50 border-gray-700 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
-            <CardHeader>
-              <CardTitle className="flex items-center text-yellow-400">
-                <AlertTriangle className="mr-2 h-5 w-5" />
-                Risk Areas
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">5</p>
-              <p className="text-sm text-gray-400 mx-2">
-                Potential risks detected
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="bg-gray-800/50 border-gray-700 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
-            <CardHeader>
-              <CardTitle className="flex items-center text-green-400">
-                <CheckCircle className="mr-2 h-5 w-5" />
-                Compliance Score
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">85%</p>
-              <p className="text-sm text-gray-400 mx-2">
-                Overall compliance rating
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Loader */}
+        {loading ? (
+          <div className="flex justify-center items-center h-48">
+            <Loader size="small" />{" "}
+            {/* Display loader while data is being fetched */}
+          </div>
+        ) : (
+          <>
+            {/* Summary Cards */}
+            {summaryData && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <Card className="bg-gray-800/50 border-gray-700 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="flex items-center text-blue-400">
+                      <Bookmark className="mr-2 h-5 w-5" />
+                      Key Findings
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-bold">
+                      {summaryData.keyFinding}
+                    </p>
+                    <p className="text-sm text-gray-400 mx-2">
+                      Important points identified
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-gray-800/50 border-gray-700 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="flex items-center text-yellow-400">
+                      <AlertTriangle className="mr-2 h-5 w-5" />
+                      Risk Areas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-bold">
+                      {summaryData.riskAreas}
+                    </p>
+                    <p className="text-sm text-gray-400 mx-2">
+                      Potential risks detected
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-gray-800/50 border-gray-700 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="flex items-center text-green-400">
+                      <CheckCircle className="mr-2 h-5 w-5" />
+                      Compliance Score
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-bold">
+                      {summaryData.complianceScore}%
+                    </p>
+                    <p className="text-sm text-gray-400 mx-2">
+                      Overall compliance level
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
 
-        {/* Detailed Summary */}
-        <Card className="bg-gray-800/50 border-gray-700 shadow-lg mb-8 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center font-bold text-teal-600">
-              <FileSearch className="mr-2 h-5 w-5" />
-              Detailed Summary
-            </CardTitle>
-            <CardDescription>
-              Explore different aspects of your audit report
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque
-            recusandae expedita nemo magnam facere quisquam iusto quae
-            reiciendis ab, vitae beatae non placeat? Impedit, dicta fuga magni
-            ipsa natus ducimus corrupti amet hic reiciendis fugit molestias
-            alias inventore, minus dolorum? Minima minus a impedit sapiente
-            tenetur eum quod assumenda id soluta illo, accusamus dolores dolorem
-          </CardContent>
-        </Card>
-
-        {/* Download Button */}
-        <div className="mt-8">
-          <Button variant="outline">
-            <Download className="mr-2 h-4 w-4" /> Download Summary as PDF
-          </Button>
-        </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 shadow-lg">
+              <h3 className="text-xl font-bold text-gray-100 mb-4">
+                Summary Report
+              </h3>
+              {summaryData ? (
+                <p className="text-gray-300">{summaryData.summary}</p>
+              ) : (
+                <p className="text-gray-400">No summary available.</p>
+              )}
+            </div>
+            <Button
+              variant="outline"
+              className="mb-6 text-blue-400 my-4 hover:bg-blue-600/10 transition-colors"
+              onClick={() => console.log("Download report")}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Download Summary
+            </Button>
+          </>
+        )}
       </main>
     </div>
   );

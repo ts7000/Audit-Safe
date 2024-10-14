@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import {
@@ -7,7 +7,7 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from "./ui/card";
+} from "./ui/withoutHoverCard";
 import {
   BarChart,
   FileText,
@@ -21,38 +21,79 @@ import {
   ThumbsUp,
   ThumbsDown,
   MessageSquare,
+  CheckCircle,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// Sample suggestions data
-const sampleSuggestions = [
-  {
-    id: 1,
-    category: "Risk Management",
-    suggestion:
-      "Implement a comprehensive risk assessment process for all new projects.",
-    impact: "High",
-    effort: "Medium",
-  },
-  {
-    id: 2,
-    category: "Compliance",
-    suggestion:
-      "Conduct quarterly compliance training sessions for all employees.",
-    impact: "Medium",
-    effort: "Low",
-  },
-  {
-    id: 3,
-    category: "Financial Controls",
-    suggestion:
-      "Enhance the approval process for expenses exceeding $10,000. Ensure a detailed review by senior management to prevent unnecessary expenses.",
-    impact: "High",
-    effort: "Low",
-  },
-];
+interface Suggestion {
+  id: number;
+  category: string;
+  suggestion: string;
+  impact: string;
+  effort: string;
+}
 
 export default function GetSuggestionsPage() {
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/get-suggestion",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              auditReport:
+                "The company underwent an external audit focusing on security policies, incident response, and data privacy. Three major vulnerabilities were identified. Data encryption protocols require an update. Incident response policies are partially aligned with compliance standards. Overall, the company demonstrates 75% compliance.",
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch suggestions");
+        }
+
+        const data = await response.json();
+        setSuggestions(data);
+      } catch (error) {
+        setError(
+          error instanceof Error ? error.message : "An unknown error occurred"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSuggestions();
+  }, []);
+
+  // Loader component
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-950 text-gray-100">
+        <div className="text-center">
+          <CheckCircle className="h-16 w-16 animate-spin text-blue-500 mb-4" />
+          <p className="text-lg">Loading Suggestions.......</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-red-400">{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-gray-950 text-gray-100 relative overflow-hidden">
       {/* Subtle background pattern */}
@@ -154,7 +195,7 @@ export default function GetSuggestionsPage() {
 
           <CardContent>
             <div className="space-y-6">
-              {sampleSuggestions.map((suggestion) => (
+              {suggestions.map((suggestion) => (
                 <Card
                   key={suggestion.id}
                   className="bg-gray-800/30 border-gray-700 flex flex-col p-4"
@@ -200,16 +241,6 @@ export default function GetSuggestionsPage() {
             </div>
           </CardContent>
         </Card>
-
-        {/* Footer */}
-        <footer className="mt-12 text-center text-gray-300 text-sm">
-          <p>
-            &copy; 2024 AuditSafe. All rights reserved. |{" "}
-            <a href="#" className="hover:text-blue-400">
-              Contact Support
-            </a>
-          </p>
-        </footer>
       </main>
     </div>
   );
