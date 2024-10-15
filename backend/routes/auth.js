@@ -18,7 +18,17 @@ router.post('/register', registerValidation, async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password } = req.body;
+    const { email, password, firstName,
+        lastName,
+        profession,
+        phoneNumber,
+        address,
+        city,
+        country,
+        company,
+        position,
+        bio,
+    } = req.body;
 
     try {
         let user = await User.findOne({ email });
@@ -28,7 +38,17 @@ router.post('/register', registerValidation, async (req, res) => {
 
         user = new User({
             email,
-            password
+            password,
+            firstName,
+            lastName,
+            profession,
+            phoneNumber,
+            address,
+            city,
+            country,
+            company,
+            position,
+            bio,
         });
 
         const salt = await bcrypt.genSalt(10);
@@ -42,13 +62,13 @@ router.post('/register', registerValidation, async (req, res) => {
         };
 
         jwt.sign(payload, process.env.JWT_SECRET, {
-            expiresIn: '1h' // Use a string for better readability
+            expiresIn: '1h' // Used a string for better readability
         }, (err, token) => {
             if (err) {
                 console.error(err);
                 return res.status(500).json({ msg: 'Token generation error' });
             }
-            res.json({ msg: "success", token });
+            res.json({ msg: "success", token, user: user });
         });
     } catch (err) {
         console.error(err.message);

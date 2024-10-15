@@ -8,7 +8,8 @@ const summarizeAuditReport = require('./routes/summary'); // Import summarizeAud
 const getSuggestions = require('./routes/suggestion'); // Import getSuggestions route
 const getAnalysis = require('./routes/analysis'); // Import getAnalysis route
 const getVisualization = require('./routes/visualization'); // Import getVisualization route
-
+const editProfile = require('./routes/peronalData'); // Import editProfile route
+const fetchUser = require('./routes/fetchUser'); // Import fetchUser route
 const app = express();
 const port = 5000;
 connectDB();
@@ -22,6 +23,8 @@ app.use("/api", summarizeAuditReport); // Prefixing the API routes
 app.use("/api", getSuggestions);
 app.use("/api", getAnalysis);
 app.use("/api", getVisualization);
+app.use("/api", editProfile);
+app.use("/api", fetchUser);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

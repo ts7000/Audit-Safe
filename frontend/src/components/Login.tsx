@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { ArrowRight, Lock } from "lucide-react";
-import { useNavigate } from "react-router-dom"; // For redirection
+import { useNavigate, Link } from "react-router-dom"; // For redirection
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -37,6 +36,7 @@ const LoginPage: React.FC = () => {
 
       const data = await response.json();
       localStorage.setItem("authToken", data.token); // Save token if needed
+      localStorage.setItem("email", email);
       navigate("/home"); // Redirect on success
     } catch (err) {
       setError("Something went wrong. Please try again.");
@@ -143,7 +143,7 @@ const LoginPage: React.FC = () => {
                 </label>
               </div>
               <Link
-                href="/forgot-password"
+                to="/forgot-password"
                 className="text-sm text-blue-400 hover:underline"
               >
                 Forgot password?
@@ -162,7 +162,7 @@ const LoginPage: React.FC = () => {
 
           <p className="mt-6 text-center text-sm text-gray-300">
             Don't have an account?{" "}
-            <Link href="/signup" className="text-blue-400 hover:underline">
+            <Link to="/signup" className="text-blue-400 hover:underline">
               Sign up
             </Link>
           </p>

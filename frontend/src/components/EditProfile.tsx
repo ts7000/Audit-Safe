@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function EditProfilePage() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,10 @@ export default function EditProfilePage() {
     position: "",
     bio: "",
   });
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -24,16 +29,58 @@ export default function EditProfilePage() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Here you would typically send the data to your backend
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    const authToken = localStorage.getItem("authToken"); // Extract token from localStorage
+    const email = localStorage.getItem("email");
+    if (!authToken) {
+      setError("Unauthorized: Please login again to create a profile");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/edit-profiles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          token: authToken,
+          email: email, // Pass token in the request body
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to create profile");
+      }
+
+      setSuccess(true);
+      console.log("Profile created successfully:", result);
+      navigate("/profile");
+    } catch (error: any) {
+      setError(error.message);
+      console.error("Error creating profile:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100 p-8 flex items-center justify-center">
       <div className="w-full max-w-2xl bg-gray-900 border border-gray-800 rounded-lg shadow-lg p-8">
         <h2 className="text-2xl font-bold text-blue-400 mb-6">Edit Profile</h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {success && (
+          <p className="text-green-500 mb-4">Profile saved successfully!</p>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -221,6 +268,7 @@ export default function EditProfilePage() {
             </button>
           </div>
         </form>
+        {loading && <p className="text-blue-400 mt-4">Saving...</p>}
       </div>
     </div>
   );
