@@ -36,26 +36,29 @@ export default function SignupPage() {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          profession: formData.profession,
-          phoneNumber: formData.phoneNumber,
-          address: formData.address,
-          city: formData.city,
-          country: formData.country,
-          company: formData.company,
-          position: formData.position,
-          bio: formData.bio,
-        }),
-      });
+      const response = await fetch(
+        "https://audit-safe.onrender.com/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            profession: formData.profession,
+            phoneNumber: formData.phoneNumber,
+            address: formData.address,
+            city: formData.city,
+            country: formData.country,
+            company: formData.company,
+            position: formData.position,
+            bio: formData.bio,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const { message } = await response.json();
@@ -389,13 +392,16 @@ export default function SignupPage() {
             ></textarea>
           </motion.div>
           <motion.div>
+            <motion.div className="my-2">
+              {error && <p className="text-red-500 text-sm">{error}</p>}
+            </motion.div>
             <motion.button
               type="submit"
               className="flex item-center justify-between bg-blue-600 text-white rounded-md px-4 py-2 hover:bg-blue-700 transition-colors duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Create Account
+              {loading ? "Creating your account..." : "Create Account"}
             </motion.button>
           </motion.div>
         </form>

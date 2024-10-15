@@ -40,13 +40,16 @@ export default function GenerateAnalysisPage() {
     const fetchAnalysisData = async () => {
       const input = localStorage.getItem("pdfText");
       try {
-        const response = await fetch("http://localhost:5000/api/get-analysis", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            auditReport: input,
-          }),
-        });
+        const response = await fetch(
+          "https://audit-safe.onrender.com/api/get-analysis",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              auditReport: input,
+            }),
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to load analysis data");

@@ -44,17 +44,20 @@ export default function EditProfilePage() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/edit-profiles", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          token: authToken,
-          email: email, // Pass token in the request body
-        }),
-      });
+      const response = await fetch(
+        "https://audit-safe.onrender.com/api/edit-profiles",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            token: authToken,
+            email: email, // Pass token in the request body
+          }),
+        }
+      );
 
       const result = await response.json();
 

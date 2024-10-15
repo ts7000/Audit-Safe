@@ -29,7 +29,7 @@ router.post("/get-suggestion", async (req, res) => {
 
         // Log the raw response
         const jsonResponse = await result.response.text();
-        console.log("Raw response from API:", jsonResponse); // Log the raw response
+        // console.log("Raw response from API:", jsonResponse); // Log the raw response
 
         // Clean the response to remove unwanted characters
         const cleanedResponse = jsonResponse.replace(/```json\n|\n```/g, '').trim(); // Remove code block formatting

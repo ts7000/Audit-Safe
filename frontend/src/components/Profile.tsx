@@ -52,13 +52,16 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/get-profiles", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ token: authToken, email }), // Use 'token'
-        });
+        const response = await fetch(
+          "https://audit-safe.onrender.com/api/get-profiles",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ token: authToken, email }), // Use 'token'
+          }
+        );
         if (response.ok) {
           const data = await response.json();
           setUserData(data); // Update state with fetched data

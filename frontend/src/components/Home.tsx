@@ -19,9 +19,8 @@ import {
   CardDescription,
   CardContent,
 } from "./ui/card";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"; // Import axios for API calls
-import { EditableStylesProvider } from "@chakra-ui/react/dist/types/editable/editable-context";
 
 export default function MainPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false); // State to manage sidebar visibility
@@ -60,7 +59,7 @@ export default function MainPage() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/uploadPDF",
+        "https://audit-safe.onrender.com/api/uploadPDF",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -70,7 +69,7 @@ export default function MainPage() {
       const { text } = response.data;
       localStorage.setItem("pdfText", text); // Store extracted text in local storage
       alert("PDF uploaded and parsed successfully!");
-      console.log("PDF text:", localStorage.getItem("pdfText"));
+      // console.log("PDF text:", localStorage.getItem("pdfText"));
     } catch (error) {
       console.error("Error uploading PDF:", error);
       alert("Failed to upload and parse PDF.");

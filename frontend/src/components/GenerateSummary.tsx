@@ -37,7 +37,8 @@ export default function GenerateSummaryPage() {
   const navigate = useNavigate();
   useEffect(() => {
     const fetchSummaryData = async () => {
-      const apiUrl = "http://localhost:5000/api/summarize-audit-report";
+      const apiUrl =
+        "https://audit-safe.onrender.com/api/summarize-audit-report";
       const auditReport = localStorage.getItem("pdfText");
 
       try {

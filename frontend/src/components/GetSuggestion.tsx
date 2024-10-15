@@ -44,7 +44,7 @@ export default function GetSuggestionsPage() {
       setLoading(true);
       try {
         const response = await fetch(
-          "http://localhost:5000/api/get-suggestion",
+          "https://audit-safe.onrender.com/api/get-suggestion",
           {
             method: "POST",
             headers: {

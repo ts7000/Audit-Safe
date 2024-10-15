@@ -51,7 +51,7 @@ export default function GenerateVisualizationPage() {
       const auditReport = localStorage.getItem("pdfText");
 
       const response = await fetch(
-        "http://localhost:5000/api/get-visualization",
+        "https://audit-safe.onrender.com/api/get-visualization",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
