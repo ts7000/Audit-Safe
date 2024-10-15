@@ -1,13 +1,7 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "./ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import Progress from "./ui/progress";
 import {
   BarChart,
@@ -23,6 +17,7 @@ import {
   Clock,
   FileSearch,
   Lightbulb,
+  EggFriedIcon,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -33,7 +28,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Sample data for charts and metrics
 const auditProgressData = [
@@ -52,8 +47,8 @@ const recentActivities = [
     time: "3 days ago",
   },
 ];
-
 export default function DashboardPage() {
+  const navigate = useNavigate();
   return (
     <div className="flex h-screen bg-gray-950 text-gray-100 relative overflow-hidden">
       {/* Subtle background pattern */}
@@ -73,12 +68,20 @@ export default function DashboardPage() {
         <div>
           <h1 className="text-2xl font-bold text-blue-400 mb-8">AuditSafe</h1>
           <nav className="space-y-2">
+            <Link to="/home">
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-gray-800 transition-colors"
+              >
+                <Home className="mr-2 h-4 w-4" /> Home
+              </Button>
+            </Link>
             <Link to="/home/dashboard">
               <Button
                 variant="ghost"
                 className="w-full justify-start hover:bg-gray-800 transition-colors"
               >
-                <Home className="mr-2 h-4 w-4" /> Dashboard
+                <EggFriedIcon className="mr-2 h-4 w-4" /> Dashboard
               </Button>
             </Link>
             <Button
@@ -120,6 +123,10 @@ export default function DashboardPage() {
           <Button
             variant="ghost"
             className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-colors"
+            onClick={() => {
+              localStorage.clear();
+              navigate("/");
+            }}
           >
             <LogOut className="mr-2 h-4 w-4" /> Logout
           </Button>

@@ -18,7 +18,7 @@ import {
   Download,
   EggFriedIcon,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Define TypeScript interface for API response
 interface AnalysisData {
@@ -33,6 +33,7 @@ export default function GenerateAnalysisPage() {
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   // Fetch data from API
   useEffect(() => {
@@ -128,7 +129,14 @@ export default function GenerateAnalysisPage() {
           <Button variant="ghost" className="w-full justify-start">
             <Settings className="mr-2 h-4 w-4" /> Settings
           </Button>
-          <Button variant="ghost" className="w-full justify-start text-red-400">
+          <Button
+            variant="ghost"
+            className="w-full justify-start text-red-400"
+            onClick={() => {
+              localStorage.clear();
+              navigate("/");
+            }}
+          >
             <LogOut className="mr-2 h-4 w-4" /> Logout
           </Button>
         </div>

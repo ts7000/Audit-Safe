@@ -19,7 +19,7 @@ import {
   CheckCircle,
   EggFriedIcon,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "./Loader"; // Import your loader component
 
 // Define an interface for the summary data
@@ -34,7 +34,7 @@ export default function GenerateSummaryPage() {
   const [activeTab, setActiveTab] = useState("overview");
   const [summaryData, setSummaryData] = useState<SummaryData | null>(null); // Use the interface here
   const [loading, setLoading] = useState(true); // State to manage loading
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchSummaryData = async () => {
       const apiUrl = "http://localhost:5000/api/summarize-audit-report";
@@ -138,6 +138,10 @@ export default function GenerateSummaryPage() {
           <Button
             variant="ghost"
             className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-colors"
+            onClick={() => {
+              localStorage.clear();
+              navigate("/");
+            }}
           >
             <LogOut className="mr-2 h-4 w-4" /> Logout
           </Button>

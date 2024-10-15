@@ -10,6 +10,8 @@ import GetSuggestionsPage from "./components/GetSuggestion";
 import GenerateAnalysisPage from "./components/GenerateAnalysis";
 import DashboardPage from "./components/Dashboard";
 import ProfilePage from "./components/Profile";
+import { Edit } from "lucide-react";
+import EditProfilePage from "./components/EditProfile";
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
         <Route path="/home/generate-analysis" element={<GenerateAnalysisPage />} />
         <Route path="/home/dashboard" element={<DashboardPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/edit-profile" element={<EditProfilePage />} />
       </Routes>
     </Router>
   );

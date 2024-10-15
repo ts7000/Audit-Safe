@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { ChevronRight, EggFriedIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "./Loader"; // Import Loader component
 import { Separator } from "./ui/separator";
 import {
@@ -44,7 +44,7 @@ export default function GenerateVisualizationPage() {
   const [colors, setColors] = useState([]); // Store chart colors
   const [loading, setLoading] = useState(false); // Loader state
   const [chartFetched, setChartFetched] = useState(false); // Control chart rendering
-
+  const navigate = useNavigate();
   const fetchChartData = async () => {
     setLoading(true); // Start Loader
     try {
@@ -197,6 +197,10 @@ export default function GenerateVisualizationPage() {
           <Button
             variant="ghost"
             className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-colors"
+            onClick={() => {
+              localStorage.clear();
+              navigate("/");
+            }}
           >
             <LogOut className="mr-2 h-4 w-4" /> Logout
           </Button>

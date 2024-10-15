@@ -13,9 +13,10 @@ import {
   LogOut,
   EggFriedIcon,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Sidebar: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <aside className="w-48 md:w-56 bg-gray-900 p-4 flex flex-col h-screen justify-between">
       {/* Top Section */}
@@ -87,6 +88,10 @@ const Sidebar: React.FC = () => {
         <Button
           variant="ghost"
           className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-900/20"
+          onClick={() => {
+            localStorage.clear();
+            navigate("/");
+          }}
         >
           <LogOut className="mr-1 h-4 w-4" /> Logout
         </Button>

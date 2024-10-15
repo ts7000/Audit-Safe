@@ -51,10 +51,11 @@ export default function ProfilePage() {
             <ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard
           </Button>
         </Link>
-
-        <Button className="bg-blue-600 hover:bg-blue-700 transition-colors">
-          <Edit className="mr-2 h-4 w-4" /> Edit Profile
-        </Button>
+        <Link to="/edit-profile">
+          <Button className="bg-blue-600 hover:bg-blue-700 transition-colors">
+            <Edit className="mr-2 h-4 w-4" /> Edit Profile
+          </Button>
+        </Link>
       </header>
 
       {/* Main Content */}
@@ -172,12 +173,14 @@ export default function ProfilePage() {
             <CardTitle className="text-gray-100">Security</CardTitle>
           </CardHeader>
           <CardContent>
-            <Button
-              variant="outline"
-              className="w-full justify-start text-left"
-            >
-              <Shield className="mr-2 h-4 w-4" /> Change Password
-            </Button>
+            <div>
+              <Button
+                variant="outline"
+                className="w-full justify-start text-left"
+              >
+                <Shield className="mr-2 h-4 w-4" /> Change Password
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

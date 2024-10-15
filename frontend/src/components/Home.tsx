@@ -1,5 +1,5 @@
 // MainPage.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar"; // Import Sidebar
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -19,14 +19,17 @@ import {
   CardDescription,
   CardContent,
 } from "./ui/card";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios"; // Import axios for API calls
+import { EditableStylesProvider } from "@chakra-ui/react/dist/types/editable/editable-context";
 
 export default function MainPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false); // State to manage sidebar visibility
   const [selectedFile, setSelectedFile] = useState<File | null>(null); // State for file input
   const [uploading, setUploading] = useState(false); // State to track upload status
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // State to track user authentication
 
+  const navigate = useNavigate();
   // Handle file input change
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -34,6 +37,16 @@ export default function MainPage() {
     }
   };
 
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+      navigate("/login");
+    }
+  });
   // Handle PDF upload
   const handleUpload = async () => {
     if (!selectedFile) {

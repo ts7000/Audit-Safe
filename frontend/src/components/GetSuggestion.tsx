@@ -24,7 +24,7 @@ import {
   CheckCircle,
   EggFriedIcon,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface Suggestion {
   id: number;
@@ -38,7 +38,7 @@ export default function GetSuggestionsPage() {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchSuggestions = async () => {
       setLoading(true);
@@ -168,6 +168,10 @@ export default function GetSuggestionsPage() {
           <Button
             variant="ghost"
             className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-colors"
+            onClick={() => {
+              localStorage.clear();
+              navigate("/");
+            }}
           >
             <LogOut className="mr-2 h-4 w-4" /> Logout
           </Button>
