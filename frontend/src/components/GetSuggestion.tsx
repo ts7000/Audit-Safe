@@ -23,6 +23,7 @@ import {
   MessageSquare,
   CheckCircle,
   EggFriedIcon,
+  AlertTriangle,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -86,10 +87,14 @@ export default function GetSuggestionsPage() {
     );
   }
 
+  // Error state
   if (error) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-red-400">{error}</p>
+      <div className="flex items-center justify-center h-screen bg-gray-950 text-gray-100">
+        <div className="text-center">
+          <AlertTriangle className="h-16 w-16 text-red-500 mb-4" />
+          <p className="text-lg">{error}</p>
+        </div>
       </div>
     );
   }
@@ -129,24 +134,30 @@ export default function GetSuggestionsPage() {
                 <EggFriedIcon className="mr-2 h-4 w-4" /> Dashboard
               </Button>
             </Link>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-800 transition-colors"
-            >
-              <FileText className="mr-2 h-4 w-4" /> Reports
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-800 transition-colors"
-            >
-              <BarChart className="mr-2 h-4 w-4" /> Analytics
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-800 transition-colors"
-            >
-              <PieChart className="mr-2 h-4 w-4" /> Insights
-            </Button>
+            <Link to="/coming-soon">
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-gray-800 transition-colors"
+              >
+                <FileText className="mr-2 h-4 w-4" /> Reports
+              </Button>
+            </Link>
+            <Link to="/coming-soon">
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-gray-800 transition-colors"
+              >
+                <BarChart className="mr-2 h-4 w-4" /> Analytics
+              </Button>
+            </Link>
+            <Link to="/coming-soon">
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-gray-800 transition-colors"
+              >
+                <PieChart className="mr-2 h-4 w-4" /> Insights
+              </Button>
+            </Link>
           </nav>
         </div>
         <div>

@@ -14,8 +14,6 @@ import {
   ChevronRight,
   AlertTriangle,
   CheckCircle,
-  TrendingUp,
-  Download,
   EggFriedIcon,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -111,15 +109,21 @@ export default function GenerateAnalysisPage() {
                 <EggFriedIcon className="mr-2 h-4 w-4" /> Dashboard
               </Button>
             </Link>
-            <Button variant="ghost" className="w-full justify-start">
-              <FileText className="mr-2 h-4 w-4" /> Reports
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <BarChart className="mr-2 h-4 w-4" /> Analytics
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <PieChart className="mr-2 h-4 w-4" /> Insights
-            </Button>
+            <Link to="/coming-soon">
+              <Button variant="ghost" className="w-full justify-start">
+                <FileText className="mr-2 h-4 w-4" /> Reports
+              </Button>
+            </Link>
+            <Link to="/coming-soon">
+              <Button variant="ghost" className="w-full justify-start">
+                <BarChart className="mr-2 h-4 w-4" /> Analytics
+              </Button>
+            </Link>
+            <Link to="/coming-soon">
+              <Button variant="ghost" className="w-full justify-start">
+                <PieChart className="mr-2 h-4 w-4" /> Insights
+              </Button>
+            </Link>
           </nav>
         </div>
         <div>

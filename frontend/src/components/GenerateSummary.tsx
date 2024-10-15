@@ -100,24 +100,30 @@ export default function GenerateSummaryPage() {
                 <EggFriedIcon className="mr-2 h-4 w-4" /> Dashboard
               </Button>
             </Link>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-800 transition-colors"
-            >
-              <FileText className="mr-2 h-4 w-4" /> Reports
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-800 transition-colors"
-            >
-              <BarChart className="mr-2 h-4 w-4" /> Analytics
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-800 transition-colors"
-            >
-              <PieChart className="mr-2 h-4 w-4" /> Insights
-            </Button>
+            <Link to="/coming-soon">
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-gray-800 transition-colors"
+              >
+                <FileText className="mr-2 h-4 w-4" /> Reports
+              </Button>
+            </Link>
+            <Link to="/coming-soon">
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-gray-800 transition-colors"
+              >
+                <BarChart className="mr-2 h-4 w-4" /> Analytics
+              </Button>
+            </Link>
+            <Link to="/coming-soon">
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-gray-800 transition-colors"
+              >
+                <PieChart className="mr-2 h-4 w-4" /> Insights
+              </Button>
+            </Link>
           </nav>
         </div>
         <div>

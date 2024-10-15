@@ -146,7 +146,7 @@ const LoginPage: React.FC = () => {
                 </label>
               </div>
               <Link
-                to="/forgot-password"
+                to="/coming-soon"
                 className="text-sm text-blue-400 hover:underline"
               >
                 Forgot password?

@@ -158,24 +158,30 @@ export default function GenerateVisualizationPage() {
                 <EggFriedIcon className="mr-2 h-4 w-4" /> Dashboard
               </Button>
             </Link>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-800 transition-colors"
-            >
-              <FileText className="mr-2 h-4 w-4" /> Reports
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-800 transition-colors"
-            >
-              <BarChart className="mr-2 h-4 w-4" /> Analytics
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start hover:bg-gray-800 transition-colors"
-            >
-              <PieChart className="mr-2 h-4 w-4" /> Insights
-            </Button>
+            <Link to="/coming-soon">
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-gray-800 transition-colors"
+              >
+                <FileText className="mr-2 h-4 w-4" /> Reports
+              </Button>
+            </Link>
+            <Link to="/coming-soon">
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-gray-800 transition-colors"
+              >
+                <BarChart className="mr-2 h-4 w-4" /> Analytics
+              </Button>
+            </Link>
+            <Link to="/coming-soon">
+              <Button
+                variant="ghost"
+                className="w-full justify-start hover:bg-gray-800 transition-colors"
+              >
+                <PieChart className="mr-2 h-4 w-4" /> Insights
+              </Button>
+            </Link>
           </nav>
         </div>
         <div>
@@ -275,13 +281,21 @@ export default function GenerateVisualizationPage() {
         {renderChart()}
         <div className="fixed bottom-0  p-4 text-center">
           <div className="flex space-x-4">
-            <Button className="bg-blue-600 hover:bg-blue-700 transition-colors">
+            <Button
+              onClick={handleGenerateChart}
+              disabled={!chartType}
+              className="bg-blue-600 hover:bg-blue-700 transition-colors"
+            >
               <RefreshCw className="mr-2 h-4 w-4" /> Regenerate Chart
             </Button>
-            <Button variant="outline">
-              <Download className="mr-2 h-4 w-4" /> Download Chart as Image
-            </Button>
-            <Button variant="ghost">Go Back to Dashboard</Button>
+            <Link to="/coming-soon">
+              <Button variant="outline">
+                <Download className="mr-2 h-4 w-4" /> Download Chart as Image
+              </Button>
+            </Link>
+            <Link to="/home">
+              <Button variant="ghost">Go Back to Dashboard</Button>
+            </Link>
           </div>
 
           {/* Footer */}

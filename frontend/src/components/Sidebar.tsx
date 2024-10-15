@@ -41,30 +41,38 @@ const Sidebar: React.FC = () => {
               <EggFriedIcon className="mr-1 h-4 w-4" /> Dashboard
             </Button>
           </Link>
-          <Button
-            variant="ghost"
-            className="w-full justify-start hover:bg-gray-800"
-          >
-            <FileText className="mr-1 h-4 w-4" /> Reports
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start hover:bg-gray-800"
-          >
-            <BarChart className="mr-1 h-4 w-4" /> Analytics
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start hover:bg-gray-800"
-          >
-            <PieChart className="mr-1 h-4 w-4" /> Insights
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start hover:bg-gray-800"
-          >
-            <AlertCircle className="mr-1 h-4 w-4" /> Alerts
-          </Button>
+          <Link to="/coming-soon">
+            <Button
+              variant="ghost"
+              className="w-full justify-start hover:bg-gray-800"
+            >
+              <FileText className="mr-1 h-4 w-4" /> Reports
+            </Button>
+          </Link>
+          <Link to="/coming-soon">
+            <Button
+              variant="ghost"
+              className="w-full justify-start hover:bg-gray-800"
+            >
+              <BarChart className="mr-1 h-4 w-4" /> Analytics
+            </Button>
+          </Link>
+          <Link to="/coming-soon">
+            <Button
+              variant="ghost"
+              className="w-full justify-start hover:bg-gray-800"
+            >
+              <PieChart className="mr-1 h-4 w-4" /> Insights
+            </Button>
+          </Link>
+          <Link to="/coming-soon">
+            <Button
+              variant="ghost"
+              className="w-full justify-start hover:bg-gray-800"
+            >
+              <AlertCircle className="mr-1 h-4 w-4" /> Alerts
+            </Button>
+          </Link>
         </nav>
       </div>
 

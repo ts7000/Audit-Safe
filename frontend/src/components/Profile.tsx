@@ -228,9 +228,11 @@ export default function ProfilePage() {
           </CardHeader>
           <CardContent>
             <div className="my-2">
-              <Button variant="outline" className="justify-start text-left">
-                <Shield className="mr-2 h-4 w-4" /> Change Password
-              </Button>
+              <Link to="/coming-soon">
+                <Button variant="outline" className="justify-start text-left">
+                  <Shield className="mr-2 h-4 w-4" /> Change Password
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>

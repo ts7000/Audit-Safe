@@ -77,7 +77,6 @@ export default function MainPage() {
       setUploading(false);
     }
   };
-  const pdfText = localStorage.getItem("pdfText");
 
   return (
     <div className="flex h-screen bg-gray-950 text-gray-200 relative overflow-hidden">
