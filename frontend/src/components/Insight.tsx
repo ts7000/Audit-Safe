@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import Progress from "./ui/progress";
@@ -21,66 +21,38 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-// Define types for the data (optional)
-type ComplianceData = {
-  name: string;
-  score: number;
-};
+const complianceData = [
+  { name: "Data Protection", score: 85 },
+  { name: "Access Control", score: 92 },
+  { name: "Incident Response", score: 78 },
+  { name: "Network Security", score: 88 },
+  { name: "Asset Management", score: 95 },
+];
 
-type RiskData = {
-  name: string;
-  value: number;
-};
+const riskData = [
+  { name: "High", value: 15 },
+  { name: "Medium", value: 30 },
+  { name: "Low", value: 55 },
+];
 
-type VulnerabilityData = {
-  name: string;
-  count: number;
-};
+const vulnerabilityData = [
+  { name: "Outdated Software", count: 12 },
+  { name: "Weak Passwords", count: 8 },
+  { name: "Misconfigured Firewalls", count: 5 },
+  { name: "Unencrypted Data", count: 3 },
+  { name: "Lack of 2FA", count: 7 },
+];
 
-type TrendData = {
-  month: string;
-  incidents: number;
-};
-
-type InsightsData = {
-  compliance: ComplianceData[];
-  risk: RiskData[];
-  vulnerabilities: VulnerabilityData[];
-  trend: TrendData[];
-};
+const trendData = [
+  { month: "Jan", incidents: 5 },
+  { month: "Feb", incidents: 8 },
+  { month: "Mar", incidents: 12 },
+  { month: "Apr", incidents: 7 },
+  { month: "May", incidents: 10 },
+  { month: "Jun", incidents: 6 },
+];
 
 export default function InsightsPage() {
-  const [insightsData, setInsightsData] = useState<InsightsData | null>(null);
-
-  useEffect(() => {
-    // Fetch data from the API
-    const fetchInsights = async () => {
-      try {
-        const response = await fetch(
-          "https://audit-safe.onrender.com/api/get-insights",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(localStorage.getItem("pdfText")),
-          }
-        );
-        const data = await response.json();
-        setInsightsData(data); // Set the fetched data
-      } catch (error) {
-        console.error("Error fetching insights data:", error);
-      }
-    };
-
-    fetchInsights();
-  }, []);
-
-  // Render loading state if the data is not available yet
-  if (!insightsData) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100 p-8">
       <motion.h1
@@ -106,7 +78,7 @@ export default function InsightsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {insightsData.compliance.map((item) => (
+              {complianceData.map((item, index) => (
                 <div key={item.name} className="mb-4">
                   <div className="flex justify-between mb-1">
                     <span>{item.name}</span>
@@ -115,32 +87,6 @@ export default function InsightsPage() {
                   <Progress value={item.score} className="h-2" />
                 </div>
               ))}
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Risk Breakdown */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <Card className="bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold">
-                Risk Breakdown
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={insightsData.risk} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis type="number" />
-                  <YAxis dataKey="name" type="category" />
-                  <Tooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="value" fill="var(--color-high)" />
-                </BarChart>
-              </ResponsiveContainer>
             </CardContent>
           </Card>
         </motion.div>
@@ -159,7 +105,7 @@ export default function InsightsPage() {
             </CardHeader>
             <CardContent>
               <ul className="space-y-2">
-                {insightsData.vulnerabilities.map((item) => (
+                {vulnerabilityData.map((item, index) => (
                   <li
                     key={item.name}
                     className="flex justify-between items-center"
@@ -192,13 +138,17 @@ export default function InsightsPage() {
                 <div className="relative w-32 h-32">
                   <svg className="w-full h-full" viewBox="0 0 36 36">
                     <path
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"
                       fill="none"
                       stroke="#444"
                       strokeWidth="2"
                     />
                     <path
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"
                       fill="none"
                       stroke="#4CAF50"
                       strokeWidth="2"
@@ -231,7 +181,7 @@ export default function InsightsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="md:col-span-2"
+          className="md:col-span-3"
         >
           <Card className="bg-gray-900 border-gray-800">
             <CardHeader>
@@ -240,8 +190,17 @@ export default function InsightsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
+              {/* <ChartContainer
+                config={{
+                  incidents: {
+                    label: "Incidents",
+                    color: "hsl(var(--chart-4))",
+                  },
+                }}
+                className="h-[300px]"
+              > */}
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={insightsData.trend}>
+                <BarChart data={trendData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
@@ -249,6 +208,7 @@ export default function InsightsPage() {
                   <Bar dataKey="incidents" fill="var(--color-incidents)" />
                 </BarChart>
               </ResponsiveContainer>
+              {/* </ChartContainer> */}
               <div className="mt-4 flex justify-between">
                 <div className="flex items-center">
                   <TrendingUp className="text-green-500 mr-2" />
