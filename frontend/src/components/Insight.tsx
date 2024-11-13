@@ -56,7 +56,16 @@ export default function InsightsPage() {
     // Fetch data from the API
     const fetchInsights = async () => {
       try {
-        const response = await fetch("/api/insights"); // replace with your actual API endpoint
+        const response = await fetch(
+          "https://audit-safe.onrender.com/api/get-insights",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(localStorage.getItem("pdfText")),
+          }
+        );
         const data = await response.json();
         setInsightsData(data); // Set the fetched data
       } catch (error) {

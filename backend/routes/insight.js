@@ -32,20 +32,18 @@ router.post("/get-insights", async (req, res) => {
     The response should be a well-structured JSON object with the above fields, without any additional text or formatting. Analyze the audit findings and provide insights for each of the fields based on typical audit data. \n\nAudit Report:\n${auditReport}`;
 
     try {
-        const result = await model.generateContent(prompt);
+        const result = await model.generateContent({ prompt });
 
-        // Log the raw response
-        const jsonResponse = await result.response.text();
-        // console.log("Raw response from API:", jsonResponse); // Log the raw response
+        // Assuming the API returns a response in the form of a string
+        const jsonResponse = result.response.text();
 
-        // Clean the response to remove unwanted characters
-        const cleanedResponse = jsonResponse.replace(/```json\n|\n```/g, '').trim(); // Remove code block formatting
+        // Clean the response by removing any unwanted characters like code blocks
+        const cleanedResponse = jsonResponse.replace(/```json\n|\n```/g, '').trim();
 
         let parsedResponse;
         try {
-            parsedResponse = JSON.parse(cleanedResponse); // Try to parse as JSON
+            parsedResponse = JSON.parse(cleanedResponse); // Try parsing the cleaned response as JSON
         } catch (parseError) {
-            // Handle parsing error
             console.error("Error parsing JSON:", parseError);
             return res.status(500).json({ error: "Failed to parse JSON response", raw: cleanedResponse });
         }
