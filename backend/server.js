@@ -25,6 +25,7 @@ app.use("/api", getAnalysis);
 app.use("/api", getVisualization);
 app.use("/api", editProfile);
 app.use("/api", fetchUser);
+app.use("/api", require('./routes/insight')); // Register the insight route
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

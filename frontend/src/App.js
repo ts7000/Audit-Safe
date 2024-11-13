@@ -13,6 +13,7 @@ import ProfilePage from "./components/Profile";
 import EditProfilePage from "./components/EditProfile";
 import ComingSoon from "./components/ComingSoon";
 import { CustomAlert } from "./components/CustomAlert";
+import InsightsPage from "./components/Insight";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/edit-profile" element={<EditProfilePage />} />
         <Route path="/coming-soon" element={<ComingSoon />} />
         <Route path="/alert" element={<CustomAlert />} />
+        <Route path="/insights" element={<InsightsPage />} />
       </Routes>
     </Router>
   );
