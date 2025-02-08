@@ -2,7 +2,7 @@
 
 AuditSafe is a web application that simplifies **security audit management** by allowing users to upload, analyze, and visualize audit reports.
 It generates **summarized insights**, provides **security suggestions**, and offers various **data visualizations** to help organizations make informed decisions.
-Designed with a clean and intuitive UI, AuditSafe aims to enhance compliance management for businesses.
+Designed with a clean and intuitive UI, AuditSafe aims to enhance compliance management for businesses .
 
 ---
 
