@@ -201,8 +201,3 @@ Contributions are welcome! If you would like to contribute:
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
----
-
-## Contact
-
-For any queries or issues, feel free to contact me.
